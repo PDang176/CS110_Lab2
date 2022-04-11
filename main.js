@@ -18,14 +18,26 @@ const winConditions = [[0, 1, 2],
                        [0, 4, 8],
                        [2, 4, 6]];
 
+function disableAll(nodes){
+    for(let i = 0; i < nodes.length; i++){
+        nodes[i].classList.add('disabled');
+    }
+}
+
 // Reset the board to an empty state
 function newGame(nodes){
+    document.getElementById('winnerMessage').style.display = "none";
+    document.getElementById('playerMessage').style.display = "block";
+        
+    currentPlayer = 0;
+    movesX = [];
+    movesO = [];
+    document.getElementById('display_player').innerHTML = players[currentPlayer];
+
     for(let i = 0; i < nodes.length; i++){
         nodes[i].classList.remove('disabled');
         nodes[i].firstChild.innerHTML = '';
-        currentPlayer = 0;
-        movesX = [];
-        movesO = [];
+        nodes[i].firstChild.classList.remove('xo');
     }
 }
 
@@ -69,7 +81,8 @@ function documentScores(){
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('display_player').innerHTML = players[currentPlayer];
+    var playerMessage = document.getElementById('display_player');
+    playerMessage.innerHTML = players[currentPlayer];
 
     var nodes = document.getElementsByClassName('node');
 
@@ -77,15 +90,24 @@ document.addEventListener('DOMContentLoaded', () => {
         nodes[i].addEventListener('click', function(){
             this.classList.add('disabled');
             this.firstChild.innerHTML = players[currentPlayer];
+            this.firstChild.classList.add('xo');
 
             recordMove(i);
             if(checkWinner()){
-                console.log(players[currentPlayer] + " is the winner!");
+                let winnerMessage = document.getElementById('winnerMessage');
+                winnerMessage.innerHTML = players[currentPlayer] + " is the winner!";
+                winnerMessage.style.display = "block";
+
+                document.getElementById('playerMessage').style.display =  "none";
                 scores[currentPlayer]++;
                 documentScores();
+
+                disableAll(nodes);
             }
-            
-            currentPlayer = currentPlayer ? 0 : 1;
+            else {
+                currentPlayer = currentPlayer ? 0 : 1;
+                playerMessage.innerHTML = players[currentPlayer];
+            }
         });
     }
 

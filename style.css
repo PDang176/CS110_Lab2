@@ -62,10 +62,10 @@ h2 {
 
 .disabled {
   pointer-events: none;
-  background-color: #FA8072;
 }
 
 .xo {
+  background-color: #FA8072;
   color: black;
   font-family: Arial;
   font-weight: bold;
@@ -73,5 +73,10 @@ h2 {
   margin: 0;
   position: absolute;
   width: 100%;
+  height: 100%;
   text-align: center;
+}
+
+#winnerMessage {
+  display: none;
 }
