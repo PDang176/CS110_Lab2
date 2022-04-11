@@ -8,7 +8,9 @@
     <script src="main.js"></script>
   </head>
   <body>
-
+    <div id="timer">
+      <h1>Timer: <span id="time">5</span></h1>
+    </div>
     <h1>Tic Tac Toe</h1>
     <h2>Scores: X:<span id="scoreX">0</span> O:<span id="scoreO">0</span></h2>
     <h2 id="playerMessage">Its your turn, <span id="display_player"></span>.</h2>
@@ -32,6 +34,11 @@
       </div>
     </div>
 
+    <div id="playerButtons">
+      <button id="playerBtn">Play Against Player</button>
+      <button id="xBtn">Play Against AI(X)</button>
+      <button id="oBtn">Play Against AI(O)</button>
+    </div>
     <button id="new_game">New Game</button>
     <button id="reset">Reset</button>
   </body>

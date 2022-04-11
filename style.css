@@ -18,7 +18,7 @@ h2 {
 }
 
 /* Button: NewGame and Reset */
-#new_game, #reset {
+button {
   text-align:center;
   background-color: #ff8c00;
   color: #000000;
@@ -30,8 +30,22 @@ h2 {
   margin: 20px auto;
 }
 
-#new_game:hover, #reset:hover {
+button:hover {
   background-color: orange;
+}
+
+#playerButtons {
+  text-align: center;
+}
+
+#playerButtons button {
+  display: inline;
+  margin-bottom: 0;
+}
+
+#playerBtn {
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 .game_board {
@@ -79,4 +93,11 @@ h2 {
 
 #winnerMessage {
   display: none;
+}
+
+#timer {
+  position: fixed;
+  right: 0%;
+  top: 0%;
+  margin: 0 20px;
 }

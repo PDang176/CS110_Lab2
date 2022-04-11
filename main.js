@@ -9,7 +9,13 @@ var scores = [0, 0];
 var movesX = [];
 var movesO = [];
 
-const winConditions = [[0, 1, 2],
+// Time each player has
+const TIME = 5;
+
+// Time current player has left remaining
+var currentTime = TIME;
+
+const WIN_CONDITIONS = [[0, 1, 2],
                        [3, 4, 5],
                        [6, 7, 8],
                        [0, 3, 6],
@@ -53,14 +59,9 @@ function recordMove(i){
 
 // Checks to see if there is a winner
 function checkWinner(){
-    // 9 moves have been made
-    if(movesX.length + movesO.length >= 9){
-        return false;
-    }
-
     // Check every possible combination of win conditions for the current player
-    for(let i = 0; i < winConditions.length; i++){
-        if(winConditions[i].every(winCondition => {
+    for(let i = 0; i < WIN_CONDITIONS.length; i++){
+        if(WIN_CONDITIONS[i].every(winCondition => {
             if(currentPlayer){
                 return movesO.includes(winCondition);
             }
@@ -80,11 +81,29 @@ function documentScores(){
     document.getElementById('scoreO').innerHTML = scores[1];
 }
 
+function countdown(time, player){
+    currentTime--;
+    time.innerHTML = currentTime;
+
+    if(currentTime === 0){
+        currentPlayer = currentPlayer ? 0 : 1;
+        player.innerHTML = players[currentPlayer];
+        currentTime = TIME + 1;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    var playerMessage = document.getElementById('display_player');
-    playerMessage.innerHTML = players[currentPlayer];
+    var player = document.getElementById('display_player');
+    player.innerHTML = players[currentPlayer];
+
+    var playerMessage = document.getElementById('playerMessage');
+    var winnerMessage = document.getElementById('winnerMessage');
 
     var nodes = document.getElementsByClassName('node');
+
+    var time = document.getElementById('time');
+
+    var timer = setInterval(countdown, 1000, time, player);
 
     for(let i = 0; i < nodes.length; i++){
         nodes[i].addEventListener('click', function(){
@@ -93,30 +112,54 @@ document.addEventListener('DOMContentLoaded', () => {
             this.firstChild.classList.add('xo');
 
             recordMove(i);
-            if(checkWinner()){
-                let winnerMessage = document.getElementById('winnerMessage');
+            
+            if(movesX.length + movesO.length >= 9){ // Check for draws
+                winnerMessage.innerHTML = "It's a draw!";
+                winnerMessage.style.display = "block";
+
+                playerMessage.style.display = "none";
+            }
+            else if(checkWinner()){
                 winnerMessage.innerHTML = players[currentPlayer] + " is the winner!";
                 winnerMessage.style.display = "block";
 
-                document.getElementById('playerMessage').style.display =  "none";
+                playerMessage.style.display =  "none";
                 scores[currentPlayer]++;
                 documentScores();
 
                 disableAll(nodes);
+
+                clearInterval(timer);
             }
             else {
                 currentPlayer = currentPlayer ? 0 : 1;
-                playerMessage.innerHTML = players[currentPlayer];
+                player.innerHTML = players[currentPlayer];
+                
+                currentTime = TIME;
+                time.innerHTML = currentTime;
+                clearInterval(timer);
+                timer = setInterval(countdown, 1000, time, player);
             }
         });
     }
 
     document.getElementById('new_game').addEventListener('click', function(){
         newGame(nodes);
+        
+        currentTime = TIME;
+        time.innerHTML = currentTime;
+        clearInterval(timer);
+        timer = setInterval(countdown, 1000, time, player);
     });
 
     document.getElementById('reset').addEventListener('click', function(){
         newGame(nodes);
+        
+        currentTime = TIME;
+        time.innerHTML = currentTime;
+        clearInterval(timer);
+        timer = setInterval(countdown, 1000, time, player);
+
         scores[0] = 0;
         scores[1] = 0;
         documentScores();
