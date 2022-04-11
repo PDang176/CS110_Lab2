@@ -10,7 +10,7 @@ h1 {
   font-size: 4em;
 }
 
-.whose_turn {
+h2 {
   margin: 10px auto;
   margin-bottom: 20px;
   text-align: center;
@@ -18,7 +18,7 @@ h1 {
 }
 
 /* Button: NewGame and Reset */
-.new_game, .reset {
+#new_game, #reset {
   text-align:center;
   background-color: #ff8c00;
   color: #000000;
@@ -30,7 +30,7 @@ h1 {
   margin: 20px auto;
 }
 
-.new_game:hover, .reset {
+#new_game:hover, #reset:hover {
   background-color: orange;
 }
 
@@ -47,7 +47,7 @@ h1 {
   flex-wrap: wrap;
 }
 
-.one, .two, .three, .four, .five, .six, .seven, .eight, .nine {
+.node{
   flex-grow: 1;
   width: 100px;
   background-color: pink;
@@ -56,11 +56,21 @@ h1 {
   position: relative;
 }
 
+.node:hover {
+  background-color: hotpink;
+}
+
+.disabled {
+  pointer-events: none;
+  background-color: #FA8072;
+}
+
 .xo {
   color: black;
+  font-family: Arial;
   font-weight: bold;
   font-size: 8em;
-  margin: 0 auto;
+  margin: 0;
   position: absolute;
   width: 100%;
   text-align: center;
