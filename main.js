@@ -15,6 +15,10 @@ const TIME = 5;
 // Time current player has left remaining
 var currentTime = TIME;
 
+// Opponent is AI or not
+var ai = false;
+
+// All possible win conditions
 const WIN_CONDITIONS = [[0, 1, 2],
                        [3, 4, 5],
                        [6, 7, 8],
@@ -24,6 +28,7 @@ const WIN_CONDITIONS = [[0, 1, 2],
                        [0, 4, 8],
                        [2, 4, 6]];
 
+// Disable all nodes
 function disableAll(nodes){
     for(let i = 0; i < nodes.length; i++){
         nodes[i].classList.add('disabled');
@@ -76,11 +81,13 @@ function checkWinner(){
     return false;
 }
 
+// Update the UI for scores
 function documentScores(){
     document.getElementById('scoreX').innerHTML = scores[0];
     document.getElementById('scoreO').innerHTML = scores[1];
 }
 
+// Countdown the timer
 function countdown(time, player){
     currentTime--;
     time.innerHTML = currentTime;
@@ -92,6 +99,7 @@ function countdown(time, player){
     }
 }
 
+// Add all eventlisteners on load of the page
 document.addEventListener('DOMContentLoaded', () => {
     var player = document.getElementById('display_player');
     player.innerHTML = players[currentPlayer];
