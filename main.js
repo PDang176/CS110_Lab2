@@ -99,7 +99,7 @@ function countdown(time, player){
     }
 }
 
-// Add all eventlisteners on load of the page
+// Add all EventListeners on load of the page
 document.addEventListener('DOMContentLoaded', () => {
     var player = document.getElementById('display_player');
     player.innerHTML = players[currentPlayer];
@@ -120,14 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
             this.firstChild.classList.add('xo');
 
             recordMove(i);
-            
-            if(movesX.length + movesO.length >= 9){ // Check for draws
-                winnerMessage.innerHTML = "It's a draw!";
-                winnerMessage.style.display = "block";
 
-                playerMessage.style.display = "none";
-            }
-            else if(checkWinner()){
+            if(checkWinner()){
                 winnerMessage.innerHTML = players[currentPlayer] + " is the winner!";
                 winnerMessage.style.display = "block";
 
@@ -136,6 +130,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 documentScores();
 
                 disableAll(nodes);
+
+                clearInterval(timer);
+            }
+            else if(movesX.length + movesO.length >= 9){ // Check for draws
+                winnerMessage.innerHTML = "It's a draw!";
+                winnerMessage.style.display = "block";
+
+                playerMessage.style.display = "none";
 
                 clearInterval(timer);
             }
