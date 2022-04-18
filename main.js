@@ -15,8 +15,11 @@ const TIME = 5;
 // Time current player has left remaining
 var currentTime = TIME;
 
-// Opponent is AI or not
-var ai = false;
+// Player = 0, AI(X) = 1, AI(O) = 2
+var ai = 0;
+
+// Timer is paused
+var paused = false;
 
 // All possible win conditions
 const WIN_CONDITIONS = [[0, 1, 2],
@@ -99,6 +102,16 @@ function countdown(time, player){
     }
 }
 
+function togglePlayerBtns(playerBtns, i){
+    playerBtns.children[i].classList.toggle('playerBtnsDisable');
+    playerBtns.children[ai].classList.toggle('playerBtnsDisable');
+    ai = i;
+}
+
+function playAI(nodes){
+
+}
+
 // Add all EventListeners on load of the page
 document.addEventListener('DOMContentLoaded', () => {
     var player = document.getElementById('display_player');
@@ -112,6 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
     var time = document.getElementById('time');
 
     var timer = setInterval(countdown, 1000, time, player);
+
+    var playerBtns = document.getElementById('playerButtons');
 
     for(let i = 0; i < nodes.length; i++){
         nodes[i].addEventListener('click', function(){
@@ -150,6 +165,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(timer);
                 timer = setInterval(countdown, 1000, time, player);
             }
+
+            // If AI's turn play for AI
+            if(ai){
+                if(currentPlayer === ai - 1){
+                    let randomMove = Math.floor(Math.random() * 9);;
+                    while(movesO.includes(randomMove) || movesX.includes(randomMove)){
+                        randomMove = Math.floor(Math.random() * 9);
+                    }
+                    nodes[randomMove].classList.add('disabled');
+                    nodes[randomMove].firstChild.innerHTML = players[currentPlayer];
+                    nodes[randomMove].firstChild.classList.add('xo');
+
+                    recordMove(randomMove);
+
+                    if(checkWinner()){
+                        winnerMessage.innerHTML = players[currentPlayer] + " is the winner!";
+                        winnerMessage.style.display = "block";
+        
+                        playerMessage.style.display =  "none";
+                        scores[currentPlayer]++;
+                        documentScores();
+        
+                        disableAll(nodes);
+        
+                        clearInterval(timer);
+                    }
+                    else if(movesX.length + movesO.length >= 9){ // Check for draws
+                        winnerMessage.innerHTML = "It's a draw!";
+                        winnerMessage.style.display = "block";
+        
+                        playerMessage.style.display = "none";
+        
+                        clearInterval(timer);
+                    }
+                    else {
+                        currentPlayer = currentPlayer ? 0 : 1;
+                        player.innerHTML = players[currentPlayer];
+                        
+                        currentTime = TIME;
+                        time.innerHTML = currentTime;
+                        clearInterval(timer);
+                        timer = setInterval(countdown, 1000, time, player);
+                    }
+                }
+            }
+            
         });
     }
 
@@ -160,6 +221,51 @@ document.addEventListener('DOMContentLoaded', () => {
         time.innerHTML = currentTime;
         clearInterval(timer);
         timer = setInterval(countdown, 1000, time, player);
+
+        // If AI's turn play for AI
+        if(ai){
+            if(currentPlayer === ai - 1){
+                let randomMove = Math.floor(Math.random() * 9);;
+                while(movesO.includes(randomMove) || movesX.includes(randomMove)){
+                    randomMove = Math.floor(Math.random() * 9);
+                }
+                nodes[randomMove].classList.add('disabled');
+                nodes[randomMove].firstChild.innerHTML = players[currentPlayer];
+                nodes[randomMove].firstChild.classList.add('xo');
+
+                recordMove(randomMove);
+
+                if(checkWinner()){
+                    winnerMessage.innerHTML = players[currentPlayer] + " is the winner!";
+                    winnerMessage.style.display = "block";
+    
+                    playerMessage.style.display =  "none";
+                    scores[currentPlayer]++;
+                    documentScores();
+    
+                    disableAll(nodes);
+    
+                    clearInterval(timer);
+                }
+                else if(movesX.length + movesO.length >= 9){ // Check for draws
+                    winnerMessage.innerHTML = "It's a draw!";
+                    winnerMessage.style.display = "block";
+    
+                    playerMessage.style.display = "none";
+    
+                    clearInterval(timer);
+                }
+                else {
+                    currentPlayer = currentPlayer ? 0 : 1;
+                    player.innerHTML = players[currentPlayer];
+                    
+                    currentTime = TIME;
+                    time.innerHTML = currentTime;
+                    clearInterval(timer);
+                    timer = setInterval(countdown, 1000, time, player);
+                }
+            }
+        }
     });
 
     document.getElementById('reset').addEventListener('click', function(){
@@ -173,5 +279,112 @@ document.addEventListener('DOMContentLoaded', () => {
         scores[0] = 0;
         scores[1] = 0;
         documentScores();
+
+        // If AI's turn play for AI
+        if(ai){
+            if(currentPlayer === ai - 1){
+                let randomMove = Math.floor(Math.random() * 9);;
+                while(movesO.includes(randomMove) || movesX.includes(randomMove)){
+                    randomMove = Math.floor(Math.random() * 9);
+                }
+                nodes[randomMove].classList.add('disabled');
+                nodes[randomMove].firstChild.innerHTML = players[currentPlayer];
+                nodes[randomMove].firstChild.classList.add('xo');
+
+                recordMove(randomMove);
+
+                if(checkWinner()){
+                    winnerMessage.innerHTML = players[currentPlayer] + " is the winner!";
+                    winnerMessage.style.display = "block";
+    
+                    playerMessage.style.display =  "none";
+                    scores[currentPlayer]++;
+                    documentScores();
+    
+                    disableAll(nodes);
+    
+                    clearInterval(timer);
+                }
+                else if(movesX.length + movesO.length >= 9){ // Check for draws
+                    winnerMessage.innerHTML = "It's a draw!";
+                    winnerMessage.style.display = "block";
+    
+                    playerMessage.style.display = "none";
+    
+                    clearInterval(timer);
+                }
+                else {
+                    currentPlayer = currentPlayer ? 0 : 1;
+                    player.innerHTML = players[currentPlayer];
+                    
+                    currentTime = TIME;
+                    time.innerHTML = currentTime;
+                    clearInterval(timer);
+                    timer = setInterval(countdown, 1000, time, player);
+                }
+            }
+        }
     });
+
+    document.getElementById('pause').addEventListener('click', function(){
+        if(paused){
+            timer = setInterval(countdown, 1000, time, player);
+            paused = false;
+        }
+        else{
+            clearInterval(timer);
+            paused = true;
+        }
+    });
+
+    for(let i = 0; i < playerBtns.children.length; i++){
+        playerBtns.children[i].addEventListener('click', function(){
+            togglePlayerBtns(playerBtns, i);
+
+            // If AI's turn play for AI
+            if(ai){
+                if(currentPlayer === ai - 1){
+                    let randomMove = Math.floor(Math.random() * 9);;
+                    while(movesO.includes(randomMove) || movesX.includes(randomMove)){
+                        randomMove = Math.floor(Math.random() * 9);
+                    }
+                    nodes[randomMove].classList.add('disabled');
+                    nodes[randomMove].firstChild.innerHTML = players[currentPlayer];
+                    nodes[randomMove].firstChild.classList.add('xo');
+
+                    recordMove(randomMove);
+
+                    if(checkWinner()){
+                        winnerMessage.innerHTML = players[currentPlayer] + " is the winner!";
+                        winnerMessage.style.display = "block";
+        
+                        playerMessage.style.display =  "none";
+                        scores[currentPlayer]++;
+                        documentScores();
+        
+                        disableAll(nodes);
+        
+                        clearInterval(timer);
+                    }
+                    else if(movesX.length + movesO.length >= 9){ // Check for draws
+                        winnerMessage.innerHTML = "It's a draw!";
+                        winnerMessage.style.display = "block";
+        
+                        playerMessage.style.display = "none";
+        
+                        clearInterval(timer);
+                    }
+                    else {
+                        currentPlayer = currentPlayer ? 0 : 1;
+                        player.innerHTML = players[currentPlayer];
+                        
+                        currentTime = TIME;
+                        time.innerHTML = currentTime;
+                        clearInterval(timer);
+                        timer = setInterval(countdown, 1000, time, player);
+                    }
+                }
+            }
+        });
+    }
 });
